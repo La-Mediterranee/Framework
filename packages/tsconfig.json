@@ -1,0 +1,4 @@
+{
+	"files": [],
+	"references": [{ "path": "pwa" }, { "path": "pwa-adapter/svelte" }, { "path": "svelte-material-components" }]
+}

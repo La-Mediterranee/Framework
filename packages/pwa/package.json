@@ -1,0 +1,27 @@
+{
+	"name": "pwa",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"workbox-cacheable-response": "^6.4.1",
+		"workbox-core": "^6.4.1",
+		"workbox-expiration": "^6.4.1",
+		"workbox-google-analytics": "^6.4.1",
+		"workbox-navigation-preload": "^6.4.1",
+		"workbox-precaching": "^6.4.1",
+		"workbox-recipes": "^6.4.1",
+		"workbox-routing": "^6.4.1",
+		"workbox-strategies": "^6.4.1",
+		"workbox-window": "^6.4.1"
+	},
+	"devDependencies": {
+		"typescript": "^4.5.2"
+	}
+}

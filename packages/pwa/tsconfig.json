@@ -1,0 +1,9 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"downlevelIteration": true,
+		"lib": ["DOM", "ES2017", "WebWorker", "WebWorker.ImportScripts"]
+	},
+	"exclude": ["dist/**/*"]
+}

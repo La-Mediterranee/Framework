@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "ROOT",
+			"path": "../"
+		},
+		{
+			"name": "packages/pwa",
+			"path": "../packages/pwa"
+		},
+		{
+			"name": "packages/pwa-adapter/svelte",
+			"path": "../packages/pwa-adapter/svelte"
+		},
+		{
+			"name": "packages/pwa-adapter/vanilla",
+			"path": "../packages/pwa-adapter/vanilla"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"node_modules/": true
+		}
+	}
+}

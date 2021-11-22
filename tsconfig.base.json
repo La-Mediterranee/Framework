@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "Node",
+		"module": "ES2020",
+		"target": "ESNext",
+		"removeComments": true,
+		// "importHelpers": true,
+		"strict": true,
+		"importsNotUsedAsValues": "error",
+		"isolatedModules": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowJs": true,
+		"checkJs": true
+	}
+}
