@@ -1,0 +1,20 @@
+{
+	"extends": "../../../tsconfig.base.json",
+	"compilerOptions": {
+		"module": "ESNext",
+		"outDir": "dist",
+		"downlevelIteration": true,
+		"lib": ["DOM", "ES2017", "WebWorker", "WebWorker.ImportScripts"],
+		"checkJs": true,
+		"strict": true,
+		"isolatedModules": true,
+		"forceConsistentCasingInFileNames": true,
+		"baseUrl": "./",
+		"paths": {
+			"$lib/*": ["src/lib/*"]
+		}
+	},
+	"types": ["svelte", "@sveltejs/kit", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte"],
+	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"],
+	"exclude": ["dist/**/*"]
+}

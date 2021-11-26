@@ -3,13 +3,16 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "vite build"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"firebase": "^9.5.0",
+		"vite": "^2.6.14",
 		"workbox-cacheable-response": "^6.4.1",
 		"workbox-core": "^6.4.1",
 		"workbox-expiration": "^6.4.1",

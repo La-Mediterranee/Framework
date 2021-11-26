@@ -2,25 +2,18 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 
-import type { Route } from 'workbox-routing';
-import type { RouteHandler, RouteMatchCallback } from 'workbox-core';
-import type { HTTPMethod } from 'workbox-routing/utils/constants';
+import type { RouteMatchCallbackOptions } from 'workbox-core';
+import type { HandlerOptions } from './interfaces';
 
-interface ImagesHandlerOptions {
-	readonly extensionRegex?: string | RegExp | RouteMatchCallback | Route;
-	readonly stragety?: RouteHandler;
-	readonly maxEntries?: number;
-	readonly maxAgeSeconds?: number;
-	readonly purgeOnQuotaError?: boolean;
-	readonly method?: HTTPMethod;
-}
+interface ImagesHandlerOptions extends HandlerOptions {}
 
 export default function imagesHandler(options?: ImagesHandlerOptions) {
 	const {
-		extensionRegex = /\.(?:jpg|jpeg|gif|png|svg|ico|webp|avif)$/i,
+		matcher = imagesMatcher,
 		maxEntries = 128,
 		maxAgeSeconds = 60 * 24 * 60 * 60,
 		purgeOnQuotaError = true,
+		cacheName = 'image',
 		method = 'GET',
 		stragety,
 	} = options || {};
@@ -32,13 +25,20 @@ export default function imagesHandler(options?: ImagesHandlerOptions) {
 	});
 
 	return registerRoute(
-		extensionRegex,
+		matcher,
 		stragety
 			? stragety
 			: new StaleWhileRevalidate({
-					cacheName: 'static-style-assets',
+					cacheName: cacheName,
 					plugins: [stylesExpirationPlugin],
 			  }),
 		method
+	);
+}
+
+function imagesMatcher(options: RouteMatchCallbackOptions) {
+	return (
+		options.request.destination === 'image' ||
+		/\.(?:jpg|jpeg|gif|png|svg|ico|webp|avif)$/i.test(options.url.pathname)
 	);
 }

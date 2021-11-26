@@ -1,3 +1,10 @@
+interface PlatformSWScope extends ServiceWorkerGlobalScope {
+	trackingId?: string;
+	logger: {
+		logEvent(eventAction: string, ...others: any[]): Promise<void>;
+	};
+}
+
 type USVString = string;
 
 /**

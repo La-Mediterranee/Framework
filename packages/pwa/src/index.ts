@@ -3,8 +3,10 @@ import { Workbox } from 'workbox-window';
 
 import type { WorkboxLifecycleWaitingEvent } from 'workbox-window';
 
+var DEBUG = import.meta.env.DEV;
+
 export async function registerServiceWorker(cb?: Function) {
-	const workbox = new Workbox('../service-worker.js');
+	const workbox = new Workbox('./service-worker.js');
 
 	const showSkipWaitingPrompt = (event: WorkboxLifecycleWaitingEvent) => {
 		// `event.wasWaitingBeforeRegister` will be false if this is
@@ -21,7 +23,7 @@ export async function registerServiceWorker(cb?: Function) {
 					// Assuming the user accepted the update, set up a listener
 					// that will reload the page as soon as the previously waiting
 					// service worker has taken control.
-					workbox.addEventListener('controlling', (event) => {
+					workbox.addEventListener('controlling', event => {
 						window.location.reload();
 					});
 

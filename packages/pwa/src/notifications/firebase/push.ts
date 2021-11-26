@@ -1,19 +1,20 @@
 declare var self: ServiceWorkerGlobalScope;
 declare var navigator: ExtendedNavigator;
 
-import { initializeApp } from 'firebase/app';
+import { getApp } from 'firebase/app';
 import { getMessaging, onBackgroundMessage, isSupported } from 'firebase/messaging/sw';
 
-import { setAppBadge } from '../utils';
-import { firebaseConfig } from '$lib/utils/constants';
+import { setAppBadge } from '../../utils';
 
 import type { MessagePayload } from 'firebase/messaging';
 
-if (await isSupported()) {
-	const firebaseApp = initializeApp(firebaseConfig);
-	const messaging = getMessaging(firebaseApp);
+export async function startPushHandler() {
+	if (await isSupported()) {
+		const firebaseApp = getApp();
+		const messaging = getMessaging(firebaseApp);
 
-	onBackgroundMessage(messaging, handlePushNotification(self));
+		onBackgroundMessage(messaging, handlePushNotification(self));
+	}
 }
 
 export function handlePushNotification(sw: ServiceWorkerGlobalScope) {

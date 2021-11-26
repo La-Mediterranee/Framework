@@ -1,6 +1,7 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+		"module": "ESNext",
 		"outDir": "dist",
 		"downlevelIteration": true,
 		"lib": ["DOM", "ES2017", "WebWorker", "WebWorker.ImportScripts"]

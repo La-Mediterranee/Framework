@@ -1,3 +1,6 @@
 packages:
     - 'packages/*'
     - 'packages/pwa-adapter/*'
+    # exclude packages that are inside test directories
+    - '!**/test/**'
+    - '!**/__tests__/**'

@@ -7,7 +7,7 @@ export default async function resetCaches(cacheNames: string[]) {
 
 	return Promise.all(
 		keys.map(cacheName => {
-			if (Object.values(cacheNames).indexOf(cacheName) === -1) {
+			if (cacheNames.indexOf(cacheName) === -1) {
 				console.log('[ServiceWorker] Removing old cache', cacheName);
 				return caches.delete(cacheName);
 			}

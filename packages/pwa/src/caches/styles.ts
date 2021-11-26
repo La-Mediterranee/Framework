@@ -2,25 +2,18 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 
-import type { Route } from 'workbox-routing';
-import type { RouteHandler, RouteMatchCallback } from 'workbox-core';
-import type { HTTPMethod } from 'workbox-routing/utils/constants';
+import type { RouteMatchCallback, RouteMatchCallbackOptions } from 'workbox-core';
+import type { HandlerOptions } from './interfaces';
 
-interface StylesHandlerOptions {
-	readonly extensionRegex?: string | RegExp | RouteMatchCallback | Route;
-	readonly stragety?: RouteHandler;
-	readonly maxEntries?: number;
-	readonly maxAgeSeconds?: number;
-	readonly purgeOnQuotaError?: boolean;
-	readonly method?: HTTPMethod;
-}
+interface StylesHandlerOptions extends HandlerOptions {}
 
 export default function stylesHandler(options?: StylesHandlerOptions) {
 	const {
-		extensionRegex = /\.(?:css|less|sass|scss)$/i,
+		matcher = stylesMatcher,
 		maxEntries = 32,
 		maxAgeSeconds = 14 * 24 * 60 * 60,
 		purgeOnQuotaError = true,
+		cacheName = 'style',
 		method = 'GET',
 		stragety,
 	} = options || {};
@@ -32,13 +25,16 @@ export default function stylesHandler(options?: StylesHandlerOptions) {
 	});
 
 	return registerRoute(
-		extensionRegex,
-		stragety
-			? stragety
-			: new StaleWhileRevalidate({
-					cacheName: 'static-style-assets',
-					plugins: [stylesExpirationPlugin],
-			  }),
+		matcher,
+		stragety ||
+			new StaleWhileRevalidate({
+				cacheName: cacheName,
+				plugins: [stylesExpirationPlugin],
+			}),
 		method
 	);
+}
+
+function stylesMatcher(options: RouteMatchCallbackOptions) {
+	return options.request.destination === 'style' || /\.(?:css|less|sass|scss)$/i.test(options.url.pathname);
 }

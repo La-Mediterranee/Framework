@@ -1,7 +1,5 @@
 /* eslint-env serviceworker */
-declare var self: ServiceWorkerGlobalScope;
-
-import * as googleAnalytics from 'workbox-google-analytics';
+import { initialize as initGA } from 'workbox-google-analytics';
 import { matchPrecache, precacheAndRoute } from 'workbox-precaching';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
 import { enable as navigationPreloadEnable } from 'workbox-navigation-preload';
@@ -10,20 +8,20 @@ import { offlineFallback, googleFontsCache } from 'workbox-recipes';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { NetworkOnly, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
 
+import Logger from './Logger';
 import { resetCaches } from './caches';
 
 import type { RouteMatchCallbackOptions, RouteHandlerCallbackOptions } from 'workbox-core';
 
+declare var self: PlatformSWScope;
+
+self.logger = self.logger || new Logger();
+
 export async function init(config: SWConfig) {
 	const { options } = config;
 	try {
-		actionvationHandler();
-
-		self.addEventListener('message', event => {
-			if (event.data && event.data.type === 'SKIP_WAITING') {
-				self.skipWaiting();
-			}
-		});
+		activationHandler();
+		skipWaitHandler();
 
 		const cacheNames: ChacheNames = {
 			images: `images_v${OFFLINE_VERSION}`,
@@ -35,7 +33,7 @@ export async function init(config: SWConfig) {
 
 		// workbox.setConfig({ debug: false });
 
-		resetCaches(cacheNames);
+		resetCaches(Object.values(cacheNames));
 
 		navigationPreloadEnable();
 
@@ -47,28 +45,35 @@ export async function init(config: SWConfig) {
 
 		clientsClaim();
 
-		// handlePushNotifications(self);
-
 		if (options.cacheGoogleFonts || true) {
 			googleFontsCache();
 		}
+
+		if (config.enableGoogleAnalytics) {
+			initGA();
+		}
+
 		// offlineFallback({
 		// pageFallback: '/_offline.html',
 		// });
 
-		googleAnalytics.initialize();
-
 		catchHandler();
-
-		routesHandler(caching);
 	} catch (error) {
 		console.error('sw: ', error);
 	}
 }
 
-function actionvationHandler() {
+function activationHandler() {
 	self.addEventListener('activate', () => {
 		console.log('SW now ready to handle fetches!');
+	});
+}
+
+function skipWaitHandler() {
+	self.addEventListener('message', event => {
+		if (event.data && event.data.type === 'SKIP_WAITING') {
+			self.skipWaiting();
+		}
 	});
 }
 
@@ -82,27 +87,4 @@ function catchHandler() {
 		return Response.error();
 		// return new Response(null, { status: 404 });
 	});
-}
-
-function routesHandler(caching: { images: Object; offline: Object }) {
-	cacheAndRoute([
-		...build.map(asset => {
-			// console.log(`=== $service-worker build === ${asset}`);
-			return {
-				url: asset,
-				revision: null,
-			} as Entry;
-		}),
-		...files.map(file => {
-			// console.log(`=== $service-worker files === ${file}`);
-			return {
-				url: file,
-				revision: `${timestamp}`,
-			} as Entry;
-		}),
-	]);
-	routeResourcesNetworkFirst();
-	routePagesOrServeOffline(caching.offline);
-	routeAndCacheJsAndCSS(SHOP_URL); //la-mediterranee\.at/
-	routeAndCacheProductImages(caching.images);
 }

@@ -2,16 +2,41 @@ import { setAppBadge } from '../utils';
 import { handlePushNotificationClick } from './click';
 import { handleSubscriptionChange } from './subscription-change';
 
-export function handlePushNotifications(sw: ServiceWorkerGlobalScope) {
+interface NotificationPayload {
+	/**
+	 * The notification's title.
+	 */
+	title?: string;
+	/**
+	 * The notification's body text.
+	 */
+	body?: string;
+	/**
+	 * The URL of an image that is downloaded on the device and displayed in the notification.
+	 */
+	image?: string;
+}
+
+interface PushData {
+	notification: NotificationPayload;
+	data: Record<string, string>;
+}
+
+export function handlePushNotifications(sw: PlatformSWScope, actions?: NotificationAction[]) {
 	let messages = 0;
 
 	sw.addEventListener('push', e => {
 		console.log('[Service Worker] Push Received.');
 
-		const info = e.data?.json();
-		const title = 'Push Notification';
+		const { notification, data } = e.data?.json() as PushData;
+
+		if (!notification?.title) {
+			return;
+		}
+
+		const title = notification.title;
 		const options: NotificationOptions = {
-			body: `${e.data?.json()}`,
+			body: notification.body,
 			data: { href: '/users/donald' },
 			actions: [
 				{ action: 'details', title: 'Details' },
@@ -26,44 +51,3 @@ export function handlePushNotifications(sw: ServiceWorkerGlobalScope) {
 	handleSubscriptionChange(sw);
 	handlePushNotificationClick(sw);
 }
-
-// export function handlePushNotificationClick(sw: ServiceWorkerGlobalScope) {
-// 	sw.addEventListener('notificationclick', (e) => {
-// 		console.log('[Service Worker] Notification click Received.');
-// 		const notification = e.notification;
-// 		const action = e.action;
-
-// 		if (action === 'dismiss') {
-// 			notification.close();
-// 		} else {
-// 			// This handles both notification click and 'details' action,
-// 			// because some platforms might not support actions.
-// 			// clients.openWindow(notification.data.href);
-// 			notification.close();
-// 			sw.clients.openWindow(new URL(''));
-// 		}
-
-// 		clearAppBadge();
-// 	});
-// }
-
-// export function handleSubscriptionChange(sw: ServiceWorkerGlobalScope) {
-// 	const applicationServerPublicKey = '';
-// 	sw.addEventListener('pushsubscriptionchange', function (event) {
-// 		console.log("[Service Worker]: 'pushsubscriptionchange' event fired.");
-// 		const e = event as PushSubscriptionChangeEvent;
-// 		console.log("[Service Worker]: 'pushsubscriptionchange' event fired.");
-// 		const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-// 		e.waitUntil(
-// 			sw.registration.pushManager
-// 				.subscribe({
-// 					userVisibleOnly: true,
-// 					applicationServerKey: applicationServerKey,
-// 				})
-// 				.then(function (newSubscription) {
-// 					// TODO: Send to application server
-// 					console.log('[Service Worker] New subscription: ', newSubscription);
-// 				})
-// 		);
-// 	});
-// }

@@ -1,15 +1,24 @@
 {
-  "name": "svelte",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "svelte": "^3.44.1"
-  }
+	"name": "svelte",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "svelte-kit build",
+		"preview": "svelte-kit preview",
+		"package": "svelte-kit package"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@sveltejs/adapter-static": "^1.0.0-next.21",
+		"@sveltejs/kit": "^1.0.0-next.196",
+		"sass": "^1.43.4",
+		"svelte": "^3.44.1",
+		"svelte-check": "^2.2.10",
+		"svelte-preprocess": "^4.9.8",
+		"svelte2tsx": "^0.4.10"
+	}
 }

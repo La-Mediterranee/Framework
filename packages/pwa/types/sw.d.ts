@@ -18,14 +18,10 @@ interface StoragePaths {
 	readonly offlinePage: string;
 }
 
-interface Entry {
-	url: string;
-	revision: string | null;
-}
-
 interface SWConfig {
 	version: number | string;
 	paths: StoragePaths;
+	enableGoogleAnalytics: boolean;
 	isBrowserNavigationEnabled: boolean;
 	options: {
 		cacheGoogleFonts: boolean;

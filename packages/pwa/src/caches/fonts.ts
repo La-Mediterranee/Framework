@@ -1,20 +1,44 @@
 import { ExpirationPlugin } from 'workbox-expiration';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst } from 'workbox-strategies';
 
-export default function fontshandler(maxEntries = 4, maxAgeSeconds = 604800, purgeOnQuotaError = true) {
+import type { RouteMatchCallbackOptions } from 'workbox-core';
+import type { HandlerOptions } from './interfaces';
+
+interface FontsHandlerOptions extends HandlerOptions {}
+
+export default function fontshandler(options: FontsHandlerOptions) {
+	const {
+		matcher = fontsMatcher,
+		maxEntries = 32,
+		maxAgeSeconds = 180 * 24 * 60 * 60,
+		purgeOnQuotaError = true,
+		cacheName = 'font',
+		method = 'GET',
+		stragety,
+	} = options || {};
+
+	const fontsExpirationPlugin = new ExpirationPlugin({
+		maxEntries,
+		maxAgeSeconds,
+		purgeOnQuotaError,
+	});
+
 	registerRoute(
-		/\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
-		new StaleWhileRevalidate({
-			cacheName: 'static-font-assets',
-			plugins: [
-				new ExpirationPlugin({
-					maxEntries: maxEntries,
-					maxAgeSeconds: maxAgeSeconds,
-					purgeOnQuotaError: purgeOnQuotaError,
-				}),
-			],
-		}),
-		'GET'
+		matcher,
+		stragety
+			? stragety
+			: new CacheFirst({
+					cacheName: cacheName,
+					plugins: [fontsExpirationPlugin],
+			  }),
+		method
+	);
+}
+
+function fontsMatcher(options: RouteMatchCallbackOptions) {
+	return (
+		options.request.destination === 'font' ||
+		/\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i.test(options.url.pathname)
 	);
 }
