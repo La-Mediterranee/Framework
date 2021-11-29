@@ -1,6 +1,6 @@
 interface PlatformSWScope extends ServiceWorkerGlobalScope {
 	trackingId?: string;
-	logger: {
+	analytics: {
 		logEvent(eventAction: string, ...others: any[]): Promise<void>;
 	};
 }
