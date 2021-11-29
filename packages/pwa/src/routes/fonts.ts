@@ -3,11 +3,11 @@ import { registerRoute } from 'workbox-routing';
 import { CacheFirst } from 'workbox-strategies';
 
 import type { RouteMatchCallbackOptions } from 'workbox-core';
-import type { HandlerOptions } from './interfaces';
+import type { HandlerOptions } from '../types';
 
 interface FontsHandlerOptions extends HandlerOptions {}
 
-export default function fontshandler(options: FontsHandlerOptions) {
+export default function fontsHandler(options?: FontsHandlerOptions) {
 	const {
 		matcher = fontsMatcher,
 		maxEntries = 32,

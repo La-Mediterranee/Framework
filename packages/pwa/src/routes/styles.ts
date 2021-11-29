@@ -3,7 +3,7 @@ import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 
 import type { RouteMatchCallback, RouteMatchCallbackOptions } from 'workbox-core';
-import type { HandlerOptions } from './interfaces';
+import type { HandlerOptions } from '../types';
 
 interface StylesHandlerOptions extends HandlerOptions {}
 

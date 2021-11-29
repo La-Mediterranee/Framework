@@ -3,13 +3,13 @@ import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 
 import type { RouteMatchCallbackOptions } from 'workbox-core';
-import type { HandlerOptions } from './interfaces';
+import type { HandlerOptions } from '../types';
 
 interface ScriptdHandlerOptions extends HandlerOptions {}
 
-export default function scriptsHandler(options: ScriptdHandlerOptions) {
+export default function scriptsHandler(options?: ScriptdHandlerOptions) {
 	const {
-		matcher = scriptsMatcher,
+		matcher = documentsMatcher,
 		maxEntries = 32,
 		maxAgeSeconds = 14 * 24 * 60 * 60,
 		purgeOnQuotaError = true,
@@ -36,10 +36,8 @@ export default function scriptsHandler(options: ScriptdHandlerOptions) {
 	);
 }
 
-function scriptsMatcher(options: RouteMatchCallbackOptions) {
-	return (
-		options.request.destination === 'script' ||
-		options.request.destination === 'worker' ||
-		/\.(?:js|ts)$/i.test(options.url.pathname)
-	);
+function documentsMatcher(options: RouteMatchCallbackOptions) {
+	const pathname = options.url.pathname;
+	const isTranslation = !/^(.*[Ii](?:11|18)[Nn].*.(?:js|ts)$)/.test(pathname);
+	return isTranslation;
 }

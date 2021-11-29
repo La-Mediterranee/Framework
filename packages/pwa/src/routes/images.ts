@@ -1,9 +1,9 @@
 import { ExpirationPlugin } from 'workbox-expiration';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst } from 'workbox-strategies';
 
 import type { RouteMatchCallbackOptions } from 'workbox-core';
-import type { HandlerOptions } from './interfaces';
+import type { HandlerOptions } from '../types';
 
 interface ImagesHandlerOptions extends HandlerOptions {}
 
@@ -28,7 +28,7 @@ export default function imagesHandler(options?: ImagesHandlerOptions) {
 		matcher,
 		stragety
 			? stragety
-			: new StaleWhileRevalidate({
+			: new CacheFirst({
 					cacheName: cacheName,
 					plugins: [stylesExpirationPlugin],
 			  }),
