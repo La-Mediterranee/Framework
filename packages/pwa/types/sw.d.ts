@@ -1,3 +1,5 @@
+import type { Strategy } from 'workbox-strategies';
+
 interface ChacheNames {
 	/** html files in the static folder or prerendered pages from sveltekit */
 	readonly pages: string;
@@ -21,9 +23,14 @@ interface StoragePaths {
 interface SWConfig {
 	version: number | string;
 	paths: StoragePaths;
-	enableGoogleAnalytics: boolean;
 	isBrowserNavigationEnabled: boolean;
+	warm?: {
+		urls: string[];
+		strategy?: Strategy;
+	};
 	options: {
-		cacheGoogleFonts: boolean;
+		cacheGoogleFonts?: boolean;
+		enableGoogleAnalytics?: boolean;
+		enableNaviagtionPreload?: boolean;
 	};
 }
