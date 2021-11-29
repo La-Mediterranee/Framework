@@ -5,9 +5,11 @@ class Analytics {
 		return self.registration.pushManager.getSubscription();
 	}
 
-	async logEvent() {}
+	async logEvent(eventAction: string, eventCategory: string) {
+		this.googleAnalytics('event', eventAction, eventCategory);
+	}
 
-	async googleAnalytic(eventAction: string, eventCategory) {
+	async googleAnalytics(hitType: GoogleAnalytics.HitTypes, eventAction: string, eventCategory: string) {
 		try {
 			const trackingId = self.trackingId;
 			if (!trackingId) {
@@ -35,7 +37,7 @@ class Analytics {
 				// Tracking ID
 				tid: trackingId,
 				// Hit Type
-				t: 'event',
+				t: hitType,
 				// Event Category
 				ec: eventCategory,
 				// Event Action
@@ -61,7 +63,7 @@ class Analytics {
 			});
 
 			if (!response.ok) {
-				return response.text().then(responseText => {
+				return response.text().then(_ => {
 					throw new Error('Bad response from Google Analytics:\n' + response.status);
 				});
 			} else {
@@ -74,3 +76,7 @@ class Analytics {
 }
 
 export default Analytics;
+
+declare module GoogleAnalytics {
+	type HitTypes = 'event' | 'create';
+}
